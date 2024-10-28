@@ -92,10 +92,9 @@ class Model:
             for session_id, session in self.sessions.items()
             if session.expiration < now
         ]
-        
-        for session in expired_sessions:
-            self.sessions.pop(session.id)
 
+        for session_id in expired_sessions:
+            self.sessions.pop(session_id)
     def add_librarian(self, username: str, password: str) -> Ok | Err:
         if any(
             librarian.username == username for librarian in self.librarians.values()
