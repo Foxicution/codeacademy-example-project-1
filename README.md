@@ -17,7 +17,7 @@ program. The program should be able to perform the following functions:
 - [ ] It should not be possible to take a book, if the reader has a book that is
       late, and he should be notified, that he has book that is late
 
-Additional instructions (for bonus points):
+## Additional instructions (for bonus points):
 
 - [ ] It should be possible to take the books only using a reader card, and it
       should be possible to register a card and assign it to a reader
@@ -32,7 +32,7 @@ Additional instructions (for bonus points):
       `poetry` are fine)
 - [ ] Could try making a GUI using `tkinter`
 
-Mandatory requirements:
+## Mandatory requirements:
 
 - A minimal structure should be held (no writing to a single file)
 - The program should work, until it is turned off, by the user
