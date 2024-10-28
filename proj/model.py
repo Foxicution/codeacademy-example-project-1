@@ -139,16 +139,16 @@ class Model:
         self.sessions[session.id] = session
         self.__cleanup_sessions()
         return session.id
-    
+
     def validate_session(self, session_id: UUID) -> Librarian | Reader | Err:
         if session_id not in self.sessions:
             return Err("Session is invalid")
-        
+
         session = self.sessions[session_id]
         if datetime.now() > session.expiration:
             self.sessions.pop(session.id)
             return Err("Session is expired")
-        
+
         return self.sessions[session_id].user
 
     def add_book(self, book: Book) -> Ok | Err:
