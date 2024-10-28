@@ -88,9 +88,14 @@ class Model:
         books_to_remove = set(
             book_id for book_id, book in self.books.items() if book.year > year
         )
-        for borrow_id, borrow in self.borrows.items():
-            if borrow.book_id in books_to_remove:
-                self.borrows.pop(borrow_id)
+        borrows_to_remove = [
+            borrow_id
+            for borrow_id, borrow in self.borrows.items()
+            if borrow.book_id in books_to_remove
+        ]
+
+        for borrow_id in borrows_to_remove:
+            self.borrows.pop(borrow_id)
 
         for book_id in books_to_remove:
             self.books.pop(book_id)
