@@ -85,7 +85,7 @@ class Model:
 
     sessions: dict[UUID, Session] = field(default_factory=dict)
 
-    def __cleanup_sessions(self):
+    def cleanup_sessions(self):
         now = datetime.now()
         expired_sessions = [
             session_id
@@ -120,7 +120,7 @@ class Model:
 
         session = Session(librarian)
         self.sessions[session.id] = session
-        self.__cleanup_sessions()
+        self.cleanup_sessions()
         return session.id
 
     def add_reader(self, reader: Reader) -> Ok | Err:
@@ -137,7 +137,7 @@ class Model:
 
         session = Session(self.readers[reader_id])
         self.sessions[session.id] = session
-        self.__cleanup_sessions()
+        self.cleanup_sessions()
         return session.id
 
     def validate_session(self, session_id: UUID) -> Librarian | Reader | Err:
