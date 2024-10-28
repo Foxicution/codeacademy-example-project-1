@@ -69,6 +69,12 @@ class Model:
     books: dict[UUID, Book] = field(default_factory=dict)
     borrows: dict[UUID, Borrow] = field(default_factory=dict)
 
+    def add_reader(self, reader: Reader) -> Ok | Err:
+        if reader.id in self.readers.keys():
+            return Err(f"A reader with id {reader.id} exists.")
+        self.readers[reader.id] = reader
+        return Ok(f"Reader {reader.name} succesfully created.")
+
     def add_book(self, book: Book) -> Ok | Err:
         if any(book == existing_book for existing_book in self.books.values()):
             return Err(
