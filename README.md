@@ -3,11 +3,11 @@
 Imagine that you are required to create a simple library management python
 program. The program should be able to perform the following functions:
 
-- [ ] Add a new book to the library (the book should have at least an author, a
+- [x] Add a new book to the library (the book should have at least an author, a
       name, release year and genre)
-- [ ] It should be possible to remove old/unused books, can be done using
+- [x] It should be possible to remove old/unused books, can be done using
       release year, if older than x, remove
-- [ ] Readers should be able to borrow a book (the number of books is limited)
+- [x] Readers should be able to borrow a book (the number of books is limited)
 - [ ] It should be possible to search for books, using the name of the book, or
       the author
 - [ ] The books can be borrowed for a limited amount of time. If the books are
