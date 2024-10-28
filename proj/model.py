@@ -95,6 +95,7 @@ class Model:
 
         for session_id in expired_sessions:
             self.sessions.pop(session_id)
+
     def add_librarian(self, username: str, password: str) -> Ok | Err:
         if any(
             librarian.username == username for librarian in self.librarians.values()
@@ -161,7 +162,7 @@ class Model:
 
     def remove_books_by_year(self, year: datetime) -> Ok:
         books_to_remove = set(
-            book_id for book_id, book in self.books.items() if book.year > year
+            book_id for book_id, book in self.books.items() if book.year < year
         )
         borrows_to_remove = [
             borrow_id
