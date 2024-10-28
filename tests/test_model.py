@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 import pytest
 
@@ -116,3 +116,65 @@ def test_remove_books_by_year(library_model):
     assert isinstance(remove_result, Ok)
     assert book1.id not in model.books
     assert book2.id in model.books
+
+
+def test_auth_librarian(library_model):
+    model, _, _, _ = library_model
+
+    result = model.add_librarian("admin", "password")
+    assert isinstance(result, Ok)
+
+    auth_result = model.auth_librarian("admin", "password")
+    assert isinstance(auth_result, UUID)
+    assert auth_result in model.sessions
+
+    failed_auth_result = model.auth_librarian("admin", "wrongpassword")
+    assert isinstance(failed_auth_result, Err)
+    assert "No librarian matching the username and password found" in failed_auth_result
+
+
+def test_auth_reader(library_model):
+    model, _, _, reader = library_model
+
+    auth_result = model.auth_reader(reader.id)
+    assert isinstance(auth_result, UUID)
+    assert auth_result in model.sessions
+
+    fake_card_id = uuid4()
+    failed_auth_result = model.auth_reader(fake_card_id)
+    assert isinstance(failed_auth_result, Err)
+    assert "No reader found with this card number" in failed_auth_result
+
+
+def test_validate_session(library_model):
+    model, _, _, reader = library_model
+
+    session_id = model.auth_reader(reader.id)
+    assert isinstance(session_id, UUID)
+
+    valid_session = model.validate_session(session_id)
+    assert valid_session == reader
+
+    model.sessions[session_id].expiration = datetime.now() - timedelta(minutes=1)
+    expired_session = model.validate_session(session_id)
+    assert isinstance(expired_session, Err)
+    assert "Session is expired" in expired_session
+
+    invalid_session = model.validate_session(uuid4())
+    assert isinstance(invalid_session, Err)
+    assert "Session is invalid" in invalid_session
+
+
+def test_cleanup_sessions(library_model):
+    model, _, _, reader = library_model
+
+    session_id_1 = model.auth_reader(reader.id)
+    session_id_2 = model.auth_reader(reader.id)
+    model.sessions[session_id_2].expiration = datetime.now() - timedelta(minutes=1)
+
+    assert session_id_1 in model.sessions
+    assert session_id_2 in model.sessions
+
+    model.cleanup_sessions()
+    assert session_id_1 in model.sessions
+    assert session_id_2 not in model.sessions
